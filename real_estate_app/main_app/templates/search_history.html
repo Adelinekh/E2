@@ -1,0 +1,160 @@
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique des recherches</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    nav {
+        width: 100%;
+        background-color: #333;
+    }
+
+    nav ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+        background-color: #333;
+    }
+
+    nav ul li {
+        display: inline;
+    }
+
+    nav ul li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    nav ul li a:hover {
+        background-color: #111;
+    }
+
+    .username_barre, .logout {
+        padding: 14px 16px;
+        color: white;
+    }
+
+    .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        max-width: 1200px;
+        margin-top: 20px;
+    }
+
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th, .table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 5px 10px;
+        text-align: center;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+    </style>
+</head>
+<body>
+  {% block content %}
+    
+      <nav>
+        <ul>
+            {% if user.is_authenticated %}
+            <li class="username_barre">Bonjour {{ user.username }}</li>
+            <li class="logout"><a href="{% url 'logout' %}">Se déconnecter</a></li>
+        {% else %}
+            <li><a href="{% url 'login' %}">Se connecter</a></li>
+        {% endif %}
+        <li><a href="{% url 'index' %}">Faire une prédiction </a></li>
+            <li><a href="{% url 'search_history' %}">Voir l'historique</a></li>
+        
+        </ul>
+    </nav>
+      
+    <div class="container">
+        <h2>Historique des recherches</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date de recherche</th>
+                    <th>Paramètres d'entrée</th>
+                    <th>Résultat de la prédiction</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for search in search_history %}
+                <tr>
+                    <td>{{ search.search_date|date:"M j, Y, P" }}</td>
+                    <td>{{ search.input_variables|display_json_keys_values|linebreaks }}</td>
+                    <td>{{ search.prediction_result }}</td>
+                    <td>
+                        <a href="{% url 'clear_search' search.id %}" class="btn btn-danger btn-sm">Effacer</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">Aucune recherche trouvée.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endblock %}
+    </div>
+</body>
+</html>

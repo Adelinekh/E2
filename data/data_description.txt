@@ -30,7 +30,7 @@ MSZoning: Identifies the general zoning classification of the sale.
 	
 LotFrontage: Linear feet of street connected to property
 
-LotArea: Lot size in square feet
+LotArea: 
 
 Street: Type of road access to property
 

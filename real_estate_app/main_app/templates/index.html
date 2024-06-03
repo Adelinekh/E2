@@ -9,9 +9,53 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href="{% static 'main_app/style.css' %}">
     <script src='main.js'></script>
+    <style>
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+        nav ul li {
+            float: left;
+        }
+        nav ul li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        nav ul li a:hover {
+            background-color: #111;
+        }
+    
+    .username_barre, .logout {
+        float: right;
+        padding: 14px 16px;
+        color: white;
+    }
+</style>
+    </style>
 </head>
 
 <body>
+    <!-- Barre de navigation -->
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+            <li class="username_barre">Bonjour {{ user.username }}</li>
+            <li class="logout"><a href="{% url 'logout' %}">Se déconnecter</a></li>
+        {% else %}
+            <li><a href="{% url 'login' %}">Se connecter</a></li>
+        {% endif %}
+            <li><a href="{% url 'search_history' %}">Voir l'historique</a></li>
+        
+        </ul>
+    </nav>
+
+
     <div class="register_page">
         <div class="form">
             <form action="{% url 'predict' %}" method="post">
@@ -19,22 +63,18 @@
 
                 Année de construction: <input type="number" name='Year_Built' placeholder="Quelle est l'année de construction?"><br>
                 Surface de la cave: <input type="number" name='Total_Bsmt_SF' placeholder="Surface de la cave en m2"><br>
-                Surface du premier étage: <input type="number" name='1st_Flr_SF' placeholder="Surface du 1er étage en m2"><br>
+                Surface des étages: <input type="number" name='Flr_SF' placeholder="Surface du 1er étage en m2"><br>
                 Surface habitable au sol: <input type="number" name='Gr_Liv_Area' placeholder="Surface habitable en m2"><br>
                 Surface du garage: <input type="number" name='Garage_Area' placeholder="Surface du garage en m2"><br>
-                Qualité générale des finitions et des matérieux: <input type="number" name='Overall_Qual' placeholder="Qualité entre 1 (très mauvais) et 10 (Excellent)"><br>
-                Nombre de salle de bain: <input type="number" name='Full_Bath' placeholder="Nombre de salles de bain"><br>
-                Qualité des matériaux extérieurs: <input type="text" name='Exter_Qual' placeholder=" Ex:Excellent, Gd:Good, TA:Average, Fa:Fair, Po:Poor"><br>
-                Qualité des matérieux de la cuisine: <input type="text" name='Kitchen_Qual' placeholder="Ex:Excellent, Gd:Good, TA:Average, Fa:Fair, Po:Poor"><br>
+                Qualité générale des finitions et des matériaux: <input type="number" name='Overall_Qual' placeholder="Qualité entre 1 (très mauvais) et 10 (Excellent)"><br>
+                Nombre de salle de bain: <input type="number" name='Bath' placeholder="Nombre de salles de bain"><br>
+                Qualité des matériaux extérieurs: <input type="text" name='Exter_Qual' placeholder="Ex:Excellent, Gd:Good, TA:Average, Fa:Fair, Po:Poor"><br>
+                Qualité des matériaux de la cuisine: <input type="text" name='Kitchen_Qual' placeholder="Ex:Excellent, Gd:Good, TA:Average, Fa:Fair, Po:Poor"><br>
                 Quartier: <input type="text" name='Neighborhood' placeholder="Nom du quartier de Ames"><br>
                 <input type="submit" value="predict" class="submit">
             </form>
             <p> La maison vaut: {{data}}</p>
         </div>
-
     </div>
-
-
 </body>
-
 </html>
